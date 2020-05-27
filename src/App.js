@@ -1,26 +1,36 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
 
-function App() {
+import './App.css';
+import {connect} from 'react-redux';
+import {increment, decrement,  toggleLoggedStatus} from './actions';
+
+function App({count, isLogged, incrementCount, decrementCount, toggledLogged}) {
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <h1>Counter {count}</h1>
+    <button onClick={() => {incrementCount(5)}}>+</button>
+    <button onClick={() => {decrementCount()}}>-</button><br></br>
+    {isLogged && (<p>Logged in</p>)}
+    <button onClick={() => {toggledLogged()}}>Toggle logged in state</button>
+   
     </div>
   );
 }
 
-export default App;
+const mapStateToProps = (state) => {
+  return {
+    count: state.counter,
+    isLogged: state.isLogged
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    incrementCount: (num) => {dispatch(increment(num))},
+    decrementCount: () => {dispatch(decrement())},
+    toggledLogged: () => {dispatch(toggleLoggedStatus())}
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
